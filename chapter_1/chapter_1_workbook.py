@@ -142,7 +142,7 @@ for token in doc_text:
 
 
 
-
+# separate with new line
 print("\n")
 
 
@@ -169,11 +169,78 @@ for token in doc_pipeline:
 doc_pipeline = nlp_pipeline("Apple is looking at buying U.K. startup for $1 billion")
 
 # iterate over the predicted entities
-for ent in doc_pipeline.ents:
+for ent in doc_pipeline.ents:  # gets predicted doc entities of Span type
     # print the entity text and its label
     print(ent.text, ent.label_)  # print predicted named entities as well as its classification
 
 
+
+
+# separate with new line
+print("\n")
+
+
+
+
+# load the small English pipeline package
+nlp_pipeline = spacy.load("en_core_web_sm")
+
+# get text
+text = "It's official: Apple is the first U.S. public company to reach a $1 trillion market value"
+
+# process text
+doc_pipeline = nlp_pipeline(text)
+
+# print the document text
+print(doc_pipeline.text)
+
+# iterate over tokens and get text, part of speech, and syntactic dependency
+for token in doc_pipeline:
+    token_text = token.text  # get token text
+    token_pos = token.pos_  # get token part of speech
+    token_dep = token.dep_  # get syntactic dependency
+
+    print(f"{token_text:<12}{token_pos:<10}{token_dep:<10}")
+
+
+
+
+
+# separate with new line
+print("\n")
+
+
+
+# iterate over the predicted entities
+for ent in doc_pipeline.ents:
+    # print the entity text and its label
+    print(ent.text, ent.label_)
+
+
+
+
+# separate with new line
+print("\n")
+
+
+
+
+# get new text
+new_text = "Upcoming iPhone X release date leaked as Apple reveals pre-orders"
+
+# process the new text
+doc_pipeline = nlp_pipeline(new_text)
+
+# iterate over the entities
+for ent in doc.ents:
+    # print the entity text and label
+    print(ent.text, ent.label_)
+
+# get the span for 'iPhone X'
+iphone_x = doc_pipeline[1:3]
+
+# print the span text
+print(f"Missing entity: {iphone_x.text}")
 
 
 
