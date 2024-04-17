@@ -245,4 +245,236 @@ print(f"Missing entity: {iphone_x.text}")
 
 
 
+# separate with new line
+print("\n")
+
+
+
+
+# import the matcher
+from spacy.matcher import Matcher
+
+# load a pipeline and create the nlp object
+nlp_matcher = spacy.load("en_core_web_sm")
+
+# initialize the matcher with the shared vocab
+matcher = Matcher(nlp.vocab)
+
+# add the pattern to the matcher
+pattern = [{"TEXT": "iPhone"}, {"TEXT": "X"}]
+matcher.add("IPHONE_PATTERN", [pattern])  # (unique id, list of patterns)
+
+# process some text
+doc_matcher = nlp_matcher("Upcoming iPhone X release date leaked")
+
+# call the matcher on the doc
+matches = matcher(doc_matcher)
+
+# iterate over the matches
+for match_id, start, end in matches:  # matches give start and end to slice from doc, match_id is the hash_value of the pattern name
+    # get the matched span
+    matched_span = doc_matcher[start:end]
+
+    print(matched_span.text)
+
+
+
+
+
+# separate with new line
+print("\n")
+
+
+
+
+# make pattern
+pattern = [
+    {"IS_DIGIT": True},  # matches digits
+    {"LOWER": "fifa"},  # matches if lowercase form leads to fifa
+    {"LOWER": "world"},  # matches if lowercase form leads to world
+    {"LOWER": "cup"},  # matches if lowercase form leads to cup
+    {"IS_PUNCT": True}  # matches if is punctuation
+]
+
+# make new doc
+doc_matcher = nlp_matcher("2018 FIFA World Cup: France won!")
+
+# initialize the matcher with the shared vocab
+matcher = Matcher(nlp.vocab)
+
+# add pattern
+matcher.add("FIFA_PATTERN", [pattern])
+
+# call the matcher on the doc
+matches = matcher(doc_matcher)
+
+# iterate over the matches
+for match_id, start, end in matches:
+    # get the matched span
+    matched_span = doc_matcher[start:end]
+
+    print(matched_span.text)
+
+
+
+
+# separate with new line
+print("\n")
+
+
+
+
+# make pattern
+pattern = [
+    {"LEMMA": "like", "POS": "VERB"},  # matches verb with the lemma 'like' and a noun
+    {"POS": "NOUN"}
+]
+
+# make new doc
+doc_matcher = nlp_matcher("I liked cats but now I like dogs more.")
+
+# initialize the matcher with the shared vocab
+matcher = Matcher(nlp.vocab)
+
+# add pattern
+matcher.add("LEMMA_PATTERN", [pattern])
+
+# call the matcher on the doc
+matches = matcher(doc_matcher)
+
+# iterate over the matches
+for match_id, start, end in matches:
+    # get the matched span
+    matched_span = doc_matcher[start:end]
+
+    print(matched_span.text)
+
+
+
+
+
+# separate with new line
+print("\n")
+
+
+
+
+# make pattern
+pattern = [
+    {"LEMMA": "buy"},
+    {"POS": "DET", "OP": "?"},  # optional: match 0 or 1 times, matches optional article
+    {"POS": "NOUN"}
+]
+
+# make new doc
+doc_matcher = nlp_matcher("I bought a smartphone. Now I'm buying apps.")
+
+# initialize the matcher with the shared vocab
+matcher = Matcher(nlp.vocab)
+
+# add pattern
+matcher.add("OPTIONAL_PATTERN", [pattern])
+
+# call the matcher on the doc
+matches = matcher(doc_matcher)
+
+# iterate over the matches
+for match_id, start, end in matches:
+    # get the matched span
+    matched_span = doc_matcher[start:end]
+
+    print(matched_span.text)
+
+
+
+
+# separate with new line
+print("\n")
+
+
+
+
+doc_matcher = nlp_matcher("Upcoming iPhone X release date leaked as Apple reveals pre-orders")
+
+# create a pattern matching two tokens: 'iPhone' and 'X'
+pattern = [{"TEXT": "iPhone"}, {"TEXT": "X"}]
+
+# add the pattern to the matcher
+matcher.add("IPHONE_X_PATTERN", [pattern])
+
+# use the matcher on the doc
+matches = matcher(doc_matcher)
+print("Matches:", [doc_matcher[start:end].text for match_id, start, end in matches])
+
+
+
+
+
+
+# separate with new line
+print("\n")
+
+
+
+
+# create a final doc
+final_doc_1 = nlp_matcher(
+    "After making the iOS update you won't notice a radical system-wide "
+    "redesign: nothing like the aesthetic upheaval we got with iOS 7. Most of "
+    "iOS 11's furniture remains the same as in iOS 10. But you will discover "
+    "some tweaks once you delve a little deeper."
+)
+
+# make pattern for full iOS versions ("iOS 7", "iOS 11", "iOS 10")
+pattern = [{"TEXT": "iOS"}, {"IS_DIGIT": True}]
+
+# add the pattern to the matcher and apply the matcher to the doc
+matcher.add("IOS_VERSION_PATTERN", [pattern])
+matches = matcher(final_doc_1)
+print("Total matches found:", len(matches))  # print number of matches found
+
+# iterate over the matches and print the span text
+for match_id, start, end in matches:
+    print("Match found:", final_doc_1[start:end].text)
+
+
+
+
+
+# separate with new line
+print("\n")
+
+
+
+
+
+final_doc_2 = nlp_matcher(
+    "i downloaded Fortnite on my laptop and can't open the game at all. Help? "
+    "so when I was downloading Minecraft, I got the Windows version where it "
+    "is the '.zip' folder and I used the default program to unpack it... do "
+    "I also need to download Winzip?"
+)
+
+# write a pattern that matches a form of "download" plus proper noun
+pattern = [{"LEMMA": "download"}, {"POS": "PROPN"}]
+
+# add pattern to the matcher and apply the matcher to the doc
+matcher.add("DOWNLOAD_THINGS_PATTERN", [pattern])
+matches = matcher(final_doc_2)
+print("Total matches found:", len(matches))
+
+# iterate over the matches and print the span text
+for match_id, start, end in matches:
+    print("Match found:", final_doc_2[start:end].text)
+
+
+
+
+
+# separate with new line
+print("\n")
+
+
+
+
 
