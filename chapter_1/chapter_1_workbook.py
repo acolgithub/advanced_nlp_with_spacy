@@ -476,5 +476,24 @@ print("\n")
 
 
 
+final_doc_3 = nlp_matcher(
+    "Features of the app include a beautiful design, smart search, automatic "
+    "labels and optional voice responses."
+)
+
+# write a pattern for adjective plus one or two nouns
+pattern = [{"POS": "ADJ"}, {"POS": "NOUN"}, {"POS": "NOUN", "OP": "?"}]
+
+# add pattern to the matcher and apply the matcher to the doc
+matcher.add("ADJ_NOUN_PATTERN", [pattern])
+matches = matcher(final_doc_3)
+print("Total matches found:", len(matches))
+
+# iterate over the matches and print the span text
+for match_id, start, end in matches:
+    print("Match found:", final_doc_3[start:end].text)
+
+
+
 
 
