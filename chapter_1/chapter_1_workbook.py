@@ -287,7 +287,7 @@ print("\n")
 
 
 
-# make pattern
+# make pattern (each entry must be included in match)
 pattern = [
     {"IS_DIGIT": True},  # matches digits
     {"LOWER": "fifa"},  # matches if lowercase form leads to fifa
@@ -324,7 +324,7 @@ print("\n")
 
 
 
-# make pattern
+# make pattern that matches 'like' as lemma with part of speech being verb followed by a noun
 pattern = [
     {"LEMMA": "like", "POS": "VERB"},  # matches verb with the lemma 'like' and a noun
     {"POS": "NOUN"}
@@ -359,7 +359,7 @@ print("\n")
 
 
 
-# make pattern
+# make pattern matching 'buy' as lemma followed by article 0 or 1 times followed by noun
 pattern = [
     {"LEMMA": "buy"},
     {"POS": "DET", "OP": "?"},  # optional: match 0 or 1 times, matches optional article
@@ -396,7 +396,7 @@ print("\n")
 
 doc_matcher = nlp_matcher("Upcoming iPhone X release date leaked as Apple reveals pre-orders")
 
-# create a pattern matching two tokens: 'iPhone' and 'X'
+# create a pattern matching two tokens: 'iPhone' and 'X' ('iPhone' must be followed by 'X')
 pattern = [{"TEXT": "iPhone"}, {"TEXT": "X"}]
 
 # add the pattern to the matcher

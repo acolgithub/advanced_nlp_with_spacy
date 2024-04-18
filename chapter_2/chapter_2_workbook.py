@@ -306,6 +306,129 @@ print(f"Similarity of the spans span1 and span2: {similarity}")
 
 
 
+# print new line to separate
+print("\n")
+
+
+
+# import matcher
+from spacy.matcher import Matcher
+
+# initialize matcher with the shared vocab
+matcher = Matcher(nlp.vocab)
+
+# patterns are lists of dictionaries describing the tokens
+pattern = [{"LEMMA": "love", "POS": "VERB"}, {"LOWER": "dogs"}]  # find lemma 'love' when part of speech is verb followed by words whose lowercase form result in 'cats'
+matcher.add("LOVE_DOGS", [pattern])  # add pattern to matcher
+
+# operators can specify how often a token should be matched
+pattern = [{"TEXT": "very", "OP": "+"}, {"TEXT": "happy"}]  # find 'very' as text 1 or more times followed by find 'happy' as text
+matcher.add("VERY_HAPPY", [pattern])
+
+# calling matcher on doc returns list of (match_id, start, end) tuples
+doc = nlp("I love dogs and I'm very very happy")
+matches = matcher(doc)
+
+# iterate over matches
+for matchid, start, end in matches:
+    print(doc[start:end])
+
+
+
+
+# overwrite matcher
+matcher = Matcher(nlp.vocab)
+
+# add pattern to matcher
+matcher.add("DOG", [[{"LOWER": "golden"}, {"LOWER": "retriever"}]])
+
+# create document
+doc = nlp("I have a Golden Retriever")
+
+# iterate over matches
+for match_id, start, end in matcher(doc):
+    # create span
+    span = doc[start:end]
+
+    # print text of span
+    print(f"Matched span: {span.text}")
+
+    # get the span's root token and root head token
+    print(f"Root token: {span.root.text}")  # root token decides category of phrase
+    print(f"Root head token: {span.root.head.text}")  # head token of root is syntactic parent that governs phrase
+
+    # get the previous token and its POS tag
+    print(f"Previous token: {doc[start - 1].text, doc[start - 1].pos_}")
+
+
+
+
+
+# import phrase matcher
+from spacy.matcher import PhraseMatcher
+
+# create phrase matcher
+phrase_matcher = PhraseMatcher(nlp.vocab)
+
+# get pattern
+pattern = nlp("Golden Retriever")
+
+# add pattern to phrase matcher
+phrase_matcher.add("DOG", [pattern])  # pattern from before about dogs
+
+# get document
+doc = nlp("I have a Golden Retriever")
+
+# iterate over the matches
+for match_id, start, end in matcher(doc):
+    # get the matched span
+    span = doc[start:end]
+
+    print(f"Matched span: {span.text}")
+
+
+
+
+# print new line to separate
+print("\n")
+
+
+
+
+# overwrite nlp object
+nlp = spacy.load("en_core_web_sm")
+
+# get document
+doc = nlp(
+    "Twitch Prime, the perks program for Amazon Prime members offering free "
+    "loot, games and other benefits, is ditching one of its best features: "
+    "ad-free viewing. According to an email sent out to Amazon Prime members "
+    "today, ad-free viewing will no longer be included as a part of Twitch "
+    "Prime for new members, beginning on September 14. However, members with "
+    "existing annual subscriptions will be able to continue to enjoy ad-free "
+    "viewing until their subscription comes up for renewal. Those with "
+    "monthly subscriptions will have access to ad-free viewing until October 15."
+)
+
+# create the match patterns
+pattern1 = [{"LOWER": "amazon"}, {"IS_TITLE": True, "POS": "PROPN"}]  # matches words whose lowercases is 'amazon' followed by prosition
+pattern2 = [{"LOWER": "ad"}, {"TEXT": "-"}, {"LOWER": "free"}, {"POS": "NOUN"}]  # matches words whose lowercase letters correspond to 'ad-free' followed by noun
+
+# initialize the matcher and add the patterns
+matcher = Matcher(nlp.vocab)
+matcher.add("PATTERN1", [pattern1])
+matcher.add("PATTERN2", [pattern2])
+
+# iterate over the matches
+for match_id, start, end in matcher(doc):
+    # print pattern string name (the match id) and text of matched span
+    print(doc.vocab.strings[match_id], doc[start:end].text)
+
+
+
+
+
+
 
 
 
