@@ -33,6 +33,13 @@ train_docbin.to_disk("./datasets/train.spacy")
 dev_docbin = DocBin(docs=dev_docs)
 dev_docbin.to_disk("./datasets/dev.spacy")
 
+# after training a pipeline can load last trained pipeline and best trained pipeline
+nlp = spacy.load("./output/model-best")
+
+# define doc
+doc = nlp("iPhone 11 v iPhone 8: What's the difference?")
+print(doc.ents)
+
 
 
 
