@@ -335,3 +335,111 @@ for ent in doc.ents:
 
 
 
+# print line to separate
+print("\n")
+
+
+
+
+
+Doc.set_extension("id", default=None)
+Doc.set_extension("page_number", default=None)
+
+
+# create data consisting of multiple texts
+data = [
+    ("This is a text", {"id": 1, "page_number": 15}),
+    ("And another text", {"id": 2, "page_number": 16}),
+]
+
+# use nlp.pipe to parse texts efficiently
+for doc, context in nlp.pipe(data, as_tuples=True):
+
+    # overwrite doc extensions
+    doc._.id = context["id"]
+    doc._.page_number = context["page_number"]
+
+
+
+
+
+# print line to separate
+print("\n")
+
+
+
+
+
+# use make_doc to only use tokenizer
+doc = nlp.make_doc("Hello world!")
+
+# use select_pipes to temporarily disable one or more pipes
+with nlp.select_pipes(disable=["tagger", "parser"]):
+
+    # process the text and print the entities
+    doc = nlp(text)
+    print(doc.ents)
+
+
+
+
+
+# print line to separate
+print("\n")
+
+
+
+
+# overwrite nlp object
+nlp = spacy.load("en_core_web_sm")
+
+# get text
+text = (
+    "Chick-fil-A is an American fast food restaurant chain headquartered in "
+    "the city of College Park, Georgia, specializing in chicken sandwiches."
+)
+
+# only tokenize the text
+doc = nlp.make_doc(text)
+print([token.text for token in doc])
+
+
+
+
+
+# print line to separate
+print("\n")
+
+
+
+
+# overwrite nlp object
+nlp = spacy.load("en_core_web_sm")
+
+# get text
+text = (
+    "Chick-fil-A is an American fast food restaurant chain headquartered in "
+    "the city of College Park, Georgia, specializing in chicken sandwiches."
+)
+
+# disable the tagger and lemmatizer
+with nlp.select_pipes(disable=["tagger", "lemmatizer"]):
+
+    # process the text
+    doc = nlp(text)
+
+    # print the entities in the doc
+    print([ent for ent in doc.ents])
+
+
+
+
+
+
+
+
+
+
+
+
+
